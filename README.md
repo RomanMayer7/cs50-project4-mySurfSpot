@@ -10,8 +10,8 @@ Gain experience with designing and implementing a web application with Python an
 
 Project Description
 ----------------------------------------------------------------------------------------
-The aplications targets all Surfers and Surfing Lovers and helps them to search  
-for best surfing spots located all around the globe and share them.They can add their comments,sharing their experience and opinions regarding every Surfing Spot.
+The aplication targets all Surfers and Surfing Lovers and helps them in ther search  
+for best surfing spots located all around the globe ,and share them.They can add their comments,sharing their experience and opinions regarding every Surfing Spot.
 They can join conversations on existing Spots and create their own Spots,providing location ,description and image URL of new Surfing Spot.Location of Surfing Spot will be shown through the Marker,spotting
 on coordinates(longitude,latitude) on the Map Widget.User can zoom in and out
 choosing his preferable view of Map Widget.Location of the Spot provided by user
