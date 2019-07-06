@@ -1,0 +1,55 @@
+{% extends "surfspot/base.html" %}
+
+{% block body %}
+<script type="text/javascript">
+$(window).on('beforeunload', function(){
+$(window).scrollTop(0);
+});
+</script>
+
+<div style="background-image:url('static/img/female-surfer.jpg');">
+<header class="jumbotron" style="width:50%; margin-left:25%;margin-top:5%;">
+  <img src="static/img/smslogo2.png" width="100" >   
+  <h1>my Surf Spot</h1>
+  Spot your next Adventure
+  <p><br></p>
+ 
+  <h2>Login</h2>
+
+  {% if message %}
+      <div>
+          {{ message }}
+      </div>
+  {% endif %}
+
+  <form action="{% url 'login' %}" method="post">
+      {% csrf_token %}
+      <input name="username" type="text" autofocus/>
+      <input name="password" type="password"/>
+      <input type="submit" value="Login"/>
+  </form>
+  <a href="#signup">Sign Up </a>
+</header>
+<p><br></p> <p><br></p> <p><br></p> <p><br></p> <p><br></p> 
+<header id="signup" class="jumbotron" style="width:50%; margin-left:25%;">
+  <h2>Sign up</h2>
+  <form action ="{% url 'signup' %}"method="post">
+    {% csrf_token %}
+    {% for field in form %}
+      <p>
+        {{ field.label_tag }}<br>
+        {{ field }}
+        {% if field.help_text %}
+          <small style="color: grey">{{ field.help_text }}</small>
+        {% endif %}
+        {% for error in field.errors %}
+          <p style="color: red">{{ error }}</p>
+        {% endfor %}
+      </p>
+    {% endfor %}
+    <button type="submit">Sign up</button>
+  </form>
+</header>
+</div>
+{% endblock %}
+

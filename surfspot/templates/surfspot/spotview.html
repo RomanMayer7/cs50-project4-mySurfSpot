@@ -1,0 +1,294 @@
+{% extends "surfspot/base.html" %}
+
+{% block head %}
+                <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+                <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.0/mapsjs-ui.css?dp-version=1549984893" />
+                <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-core.js"></script>
+                <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-service.js"></script>
+                <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-ui.js"></script>
+                <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js"></script>
+                
+ {% endblock %}    
+
+ {% block body %}
+ <style>
+ .r3{
+    height:70%;
+
+   
+}
+.img2{
+  height:auto;
+  margin-left:3%;
+}
+.spot{
+  height:100%;
+  display:flex;
+  flex-direction:column;
+}
+#mapContainer{
+  display:flex;
+    height:80%;
+    width:auto;
+   background: grey;
+  margin-left:3%;
+  margin-right:3%;
+}
+#sendcomment{
+  width:50%;
+  margin-left :25%;
+}
+.comment{
+   background-color: rgb(111, 190, 255);
+   margin-left:5%;
+   margin-top:2%;
+   width:80%;
+   text-align:left;
+   padding:2%;
+            }
+ </style>
+
+    <div class="spot" data-location="{{ location }}" data-user="{{user}}" data-id="{{spot_id}}" data-apiid="{{api_id}}" data-code="{{api_code}}">
+        <div style="margin-left:2%; color:rgb(50, 158, 201);"><h2>my SURF SPOT</h2></div>
+  
+    <div class="row r3 container-fluid">
+          <div class="col-lg-3 col-md-12 col-sm-12" >
+
+                  <h1>{{ title }}</h1>
+                  <div id="mapContainer"> </div>
+                   
+          </div>
+          <div class="col-lg-9 col-md-12 col-sm-12" >
+              <img class= "img-fluid img2" src="static/img/{{image}}" onerror="this.src='{{image}}'" >
+          </div>
+          <div class="col-lg-12 col-md-12 col-sm-12" >
+              <p><h5>{{ description }}</h5></p>
+    </div>
+ 
+           </div>   
+    
+          </div>
+          <div id="sendcomment">
+          <input type="text" size="36" id="myMessage">
+          <button id="sendbutton">Send</button>
+        </div>
+    <div id="comment-area">
+      {% for comment in comments %}
+
+      <h5><div class="comment" data-id="{{ comment.id  }}" >
+        <button type=submit class= close removebutton class=close data-dismiss=alert>
+          ×</button>
+          <div class=rdir><strong><div class=usr>{{ comment.creator  }}</div></strong> wrote on:{{ comment.date  }}</div>
+          <hr class=message-inner-separator></hr>
+          <div class=mcontent><p>{{ comment.content }}</p></div>
+   </div></h5>"
+      {% endfor %}
+    </div>
+
+    </div>
+
+  
+<script type="text/javascript" charset="UTF-8">
+      
+ //function to return current date and time
+function getCurrentDate(){
+
+var today = new Date();
+var dd = today.getDate();
+var mm = today.getMonth() + 1; //January is 0!
+var yyyy = today.getFullYear();
+var hh=today.getHours();
+var min=today.getMinutes();
+var ss=today.getSeconds();
+if (dd < 10) {
+dd = '0' + dd;
+}
+if (mm < 10) {
+mm = '0' + mm;
+}
+if (hh < 10) {
+hh = '0' + hh;
+}
+if (min < 10) {
+min = '0' + min;
+}
+if (ss < 10) {
+ss = '0' + ss;
+}
+today = mm + '/' + dd + '/' + yyyy+"/"+hh+ ":" +min  + ":" +ss ;
+return today;
+}
+
+
+//function to add new message content to the DOM 
+//and to Database via AJAX HTTP Request
+     $(document).ready(function() {
+      	$("#sendbutton").on('click', function() {
+         // alert($(".spot").data("user"));
+			const request = new XMLHttpRequest();
+        request.open('POST','/addcomment');
+		    request.onload=()=>	{
+			const data=JSON.parse(request.responseText);
+			if(data.success){
+
+        $("#comment-area").append(
+               "<h5><div class=comment>"+
+                "<button type=submit class= close removebutton class=close data-dismiss=alert>"+
+                "×</button>"+
+                "<div class=rdir><strong><div class=usr>"+($(".spot").data("user"))+"</div></strong> wrote on:"+getCurrentDate()+"</div>"+
+                "<hr class=message-inner-separator></hr>"+
+                "<div class=mcontent><p>"+($('#myMessage').val())+"</p></div>"+
+			   "</div></h5>"
+               );
+
+     $(".close").on('click', function() {
+         //alert("Will Delete it");
+         //$(this).closest( ".comment" ).css( "background-color", "red" );
+         //alert($(this).closest( ".comment" ).data("id"));
+          location.reload();//reload the page 
+        //check if current user is actual creator of message,if so..
+        if($(".spot").data("user")==$(this).parent().find('.usr').text()){
+			 //call backend function to remove closed element from server's storage
+			 const request = new XMLHttpRequest();
+             request.open('POST','/removecomment');
+		     request.onload=()=>	alert('message deleted');
+		     const data=new FormData();
+             data.append('removed_id',$(this).closest( ".comment" ).data("id"));
+             request.send(data);
+			 //remove element from the HTML context of the page
+             $(this).parent().remove();
+             }
+            else alert("Not allowed to delete the message!Only creator can")
+		});  
+
+           // location.reload();//reload the page 
+           $('#myMessage').val("");
+				}
+				else {alert("Error");}
+			}
+     
+      //alert(getCurrentDate());
+		  const data=new FormData();
+			data.append('m_content',$('#myMessage').val());
+      data.append('m_date',getCurrentDate());
+      data.append('m_creator',$(".spot").data("user"));
+      data.append('spot_id',$(".spot").data("id"));
+      //alert($(".spot").data("id"));
+      request.send(data);
+		  
+		});
+    $(".close").on('click', function() {
+        // alert("Will Delete it");
+         //$(this).closest( ".comment" ).css( "background-color", "red" );
+        // alert($(this).closest( ".comment" ).data("id"));
+          location.reload();//reload the page 
+        //check if current user is actual creator of message,if so..
+        if($(".spot").data("user")==$(this).parent().find('.usr').text()){
+			 //call backend function to remove closed element from server's storage
+			 const request = new XMLHttpRequest();
+             request.open('POST','/removecomment');
+		     request.onload=()=>	alert('message deleted');
+		     const data=new FormData();
+             data.append('removed_id',$(this).closest( ".comment" ).data("id"));
+             request.send(data);
+			 //remove element from the HTML context of the page
+             $(this).parent().remove();
+             }
+            else alert("Not allowed to delete the message!Only creator can")
+		});  
+    
+    
+     	});
+
+
+//HERE GOES ALL JAVASCRIPT CODE RELATED TO "HERE WE GO" API 
+
+            /*function moveMapToAustralia(map){
+            map.setCenter({lat:-33.67465, lng:151.31579});
+            map.setZoom(10.4);
+              }*/
+              function moveMapToMarker(map,la,lo){
+            map.setCenter({lat:la, lng:lo});
+            map.setZoom(10.4);
+              }
+            //Get 'app_id' and 'app_code'  for API
+            var app_id = document.getElementsByClassName("Spot")[0].getAttribute("data-apiid")
+            var app_code = document.getElementsByClassName("Spot")[0].getAttribute("data-code")
+            // Instantiate a map and platform object:
+            var platform = new H.service.Platform({
+              'app_id':app_id,
+              'app_code':app_code
+            });
+            var pixelRatio = window.devicePixelRatio || 1;
+            var defaultLayers = platform.createDefaultLayers({
+            tileSize: pixelRatio === 1 ? 256 : 512,
+            ppi: pixelRatio === 1 ? undefined : 320
+             });
+            // Retrieve the target element for the map:
+            var targetElement = document.getElementById('mapContainer');
+            
+            // Get default map types from the platform object:
+            var defaultLayers = platform.createDefaultLayers();
+            
+            // Instantiate the map:
+            var map = new H.Map(
+              document.getElementById('mapContainer'),
+              defaultLayers.normal.map,{pixelRatio: pixelRatio},
+              {
+              zoom: 10.4,
+              center: {lat:-33.67465, lng:151.31579}
+              });
+            //Step 3: make the map interactive
+            // MapEvents enables the event system
+            // Behavior implements default interactions for pan/zoom (also on mobile touch environments)
+            var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+
+           // Create the default UI components
+            var ui = H.ui.UI.createDefault(map, defaultLayers);
+
+            //Get search text for geocodingParams
+            //from parent's  <div class="Spot">  data-location attribute
+            var locations = document.getElementsByClassName("Spot")[0].getAttribute("data-location")
+            //var location=this.dataset.location;
+
+            var geocodingParams = {
+                //searchText: 'North Avalon, NSW, Australia'
+                searchText:locations
+              };
+              //Northern Beaches
+              //Bells Beach
+              //North Avalon
+             // Mona Vale
+
+            // Define a callback function to process the geocoding response:
+            var onResult = function(result) {
+              var locations = result.Response.View[0].Result,
+                position,
+                marker;
+              // Add a marker for each location found
+              for (i = 0;  i < locations.length; i++) {
+              position = {
+                lat: locations[i].Location.DisplayPosition.Latitude,
+                lng: locations[i].Location.DisplayPosition.Longitude
+              };
+              marker = new H.map.Marker(position);
+              map.addObject(marker);
+              // Zoom in to Marker Location
+              moveMapToMarker(map,locations[locations.length-1].Location.DisplayPosition.Latitude
+              ,locations[locations.length-1].Location.DisplayPosition.Longitude);
+              }
+            };
+            
+            // Get an instance of the geocoding service:
+            var geocoder = platform.getGeocodingService();
+            
+            // Call the geocode method with the geocoding parameters,
+            // the callback and an error callback function (called if a
+            // communication error occurs):
+            geocoder.geocode(geocodingParams, onResult, function(e) {
+              alert(e);
+            });
+    //END OF THE  JAVASCRIPT CODE RELATED TO" HERE WE GO" API 
+            </script>
+     
+     {% endblock %}

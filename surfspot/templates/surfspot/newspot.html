@@ -1,0 +1,31 @@
+{% extends "surfspot/base.html" %}
+{% block body %}
+<div style="background-image:url('static/img/female-surfer.jpg');">
+    <header class="jumbotron" style="width:50%; margin-left:25%;margin-top:2%;">
+      <img src="static/img/smslogo2.png" width="100" >   
+      <h2>my Surf Spot</h2>
+      Spot your next Adventure
+      
+     
+      <h2>Create New Surf Spot </h2>
+      <form action="{% url 'createspot' %}" method="post">
+            <div class="form-group">
+            {% csrf_token %}
+            <div ><h5>Name Your Surf Spot:
+            <input class="form-control" name="title" type="text" autofocus/></h5></div>
+            <div >Specify Surf Spot Location:
+             <input class="form-control" name="location" type="text"/></div>
+             Describe your Surf Spot here:
+            <textarea class="form-control" name="description"
+            placeholder="Describe your Surf Spot here..." 
+            rows="4" cols="50">
+            </textarea>
+            <div>
+            Give URL of Surf Spot's Image:
+            <input  name="image" type="text"/></div>
+            <input type="submit" value="Create"/>
+            </div>
+        </form>
+      </header>
+
+    {% endblock %}

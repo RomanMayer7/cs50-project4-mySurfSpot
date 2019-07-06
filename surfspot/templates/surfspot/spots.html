@@ -1,0 +1,47 @@
+{% extends "surfspot/base.html" %}
+
+{% block body %}
+<style>
+.btn-link {
+display:flex;
+background:none;
+border: none;
+padding: 0px;
+align-items: flex-end;
+color: #3097D1;
+font: inherit;
+}
+.thumbimg{
+max-width:100%;
+height:auto;
+
+}
+.thumbnail{
+  border: 1px solid #3097D1;
+}
+.snippet{
+  max-width:100%;
+  border: 1px solid #3097D1;
+}
+</style>
+<header class="jumbotron" style="padding:1%;">
+  <h1>my Surf Spot</h1>
+  Spot your next Adventure
+  <p><br></p>
+   <p> <a class="btn btn-primary btn-large" href="{% url 'newspot' %}">Create New Surf Spot</a></p>
+</header>
+
+
+<div class="row  img-area">
+  {% for spot in spots %}
+    <div class="col-lg-3 col-md-4 col-sm-6" data-id={{spot.id}}>
+      <div class="img-thumbnail">
+          <div class=""><b>{{ spot.title }}>></b></div>
+          <a href="{% url 'spotview' spot.id %}">
+              <img class="img-fluid img-thumbnail thumbimg"  src="static/img/{{spot.image}}" onerror="this.src='{{spot.image}}'" >
+          </a>
+          <a class="btn-link"  href="{% url 'spotview' spot.id %}">Check this Spot</a>
+      </div>    
+  </div>
+  {% endfor %}
+{% endblock %}

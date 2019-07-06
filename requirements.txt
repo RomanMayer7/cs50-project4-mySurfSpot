@@ -1,0 +1,5 @@
+Django==2.0.3
+
+
+Need to have 'APP_ID' and 'APP_CODE' from https://www.here.com/
+to set them as your OS environmental variables.
