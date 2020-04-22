@@ -6,7 +6,7 @@ Project Name :"my Surf Spot"
 
 Project Objective
 ----------------------------------------------------------------------------------------
-Gain experience with designing and implementing a web application with Python and JavaScript.
+Gain experience with designing and implementing a Web application with Python\Django Framework and JavaScript,using HERE API for Geolocation.
 
 Project Description
 ----------------------------------------------------------------------------------------
