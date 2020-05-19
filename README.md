@@ -13,8 +13,8 @@ Gain experience with designing and implementing a Web application with Python\Dj
 Project Description
 ----------------------------------------------------------------------------------------
 The aplication targets all Surfers and Surfing Lovers and helps them in ther search  
-for best surfing spots located all around the globe ,and share them.They can add their comments,sharing their experience and opinions regarding every Surfing Spot.
-They can join conversations on existing Spots and create their own Spots,providing location ,description and image URL of new Surfing Spot.Location of Surfing Spot will be shown through the Marker,spotting
+for best surfing spots located all around the globe to share them with others.They can add their comments,sharing their experience and opinions regarding every Surfing Spot.
+They can join conversations on existing Spot channels and create their own Spots,providing location ,description and image URL of new Surfing Spot.Location of Surfing Spot will be shown through the Marker,spotting
 on coordinates(longitude,latitude) on the Map Widget.User can zoom in and out
 choosing his preferable view of Map Widget.Location of the Spot provided by user
 in moment of Creation of New Surfing Spot record is interpreted into actual coordinates(longitude,latitude) with help of "HERE we go" API and shown on the Map Widget using API functionality provided inside appropriate JavaScript code snippet presented in page template.Application Implemented with usage Python + DJango.
